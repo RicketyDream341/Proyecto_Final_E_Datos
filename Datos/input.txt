@@ -1,0 +1,2 @@
+Archivo de prueba adicional
+Y varias líneas, también símbolos especiales #@
