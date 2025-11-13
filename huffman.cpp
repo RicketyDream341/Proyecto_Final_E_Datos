@@ -4,9 +4,6 @@
 #include <unordered_map>
 #include <cstdio>
 
-// ============================================================
-// Estructuras de apoyo
-// ============================================================
 
 using ull = unsigned long long;
 
@@ -14,13 +11,9 @@ struct NodeCmp {
     bool operator()(const HuffmanNode* a, const HuffmanNode* b) const {
         if (a->freq != b->freq)
             return a->freq > b->freq;
-        return a->ch > b->ch; // desempate por ASCII
+        return a->ch > b->ch;
     }
 };
-
-// ============================================================
-// Construcción del árbol de Huffman
-// ============================================================
 
 HuffmanNode* Huffman::buildTreeFromFreq(const std::unordered_map<unsigned char, ull>& freq) {
     std::priority_queue<HuffmanNode*, std::vector<HuffmanNode*>, NodeCmp> pq;
@@ -42,10 +35,6 @@ HuffmanNode* Huffman::buildTreeFromFreq(const std::unordered_map<unsigned char, 
     return pq.top();
 }
 
-// ============================================================
-// Generación de códigos
-// ============================================================
-
 void Huffman::generateCodes(HuffmanNode* node, const std::string& prefix) {
     if (!node) return;
     if (node->isLeaf()) {
@@ -55,10 +44,6 @@ void Huffman::generateCodes(HuffmanNode* node, const std::string& prefix) {
         generateCodes(node->right, prefix + "1");
     }
 }
-
-// ============================================================
-// Escritura y lectura del árbol (preorden)
-// ============================================================
 
 void Huffman::writeTree(FILE* out, HuffmanNode* node) {
     if (!node) return;
@@ -85,10 +70,6 @@ HuffmanNode* Huffman::readTree(FILE* in) {
     }
 }
 
-// ============================================================
-// Compresión
-// ============================================================
-
 bool Huffman::compress(const std::string& inputPath, const std::string& outputPath) {
     std::string data;
     if (!readFileToString(inputPath, data)) {
@@ -96,27 +77,21 @@ bool Huffman::compress(const std::string& inputPath, const std::string& outputPa
         return false;
     }
 
-    // 1️⃣ Calcular frecuencias
     std::unordered_map<unsigned char, ull> freq;
     for (unsigned char c : data) freq[c]++;
 
-    // 2️⃣ Construir árbol
     HuffmanNode* root = buildTreeFromFreq(freq);
     generateCodes(root, "");
 
-    // 3️⃣ Escribir salida
     FILE* out = fopen(outputPath.c_str(), "wb");
     if (!out) return false;
 
-    // Escribir árbol completo
     writeTree(out, root);
-    fputc('\n', out); // delimitador para fin del árbol
+    fputc('\n', out);
 
-    // Escribir número total de caracteres
     unsigned long long total = data.size();
     fwrite(&total, sizeof(total), 1, out);
 
-    // Escribir los bits codificados
     BitWriter bw(out);
     for (unsigned char c : data)
         bw.writeBits(codes_[c]);
@@ -127,10 +102,6 @@ bool Huffman::compress(const std::string& inputPath, const std::string& outputPa
     return true;
 }
 
-// ============================================================
-// Descompresión
-// ============================================================
-
 bool Huffman::decompress(const std::string& inputPath, const std::string& outputPath) {
     FILE* in = fopen(inputPath.c_str(), "rb");
     if (!in) {
@@ -138,15 +109,12 @@ bool Huffman::decompress(const std::string& inputPath, const std::string& output
         return false;
     }
 
-    // 1️⃣ Leer árbol
     HuffmanNode* root = readTree(in);
-    fgetc(in); // consumir el '\n' de separación
+    fgetc(in);
 
-    // 2️⃣ Leer total de caracteres
     unsigned long long totalChars = 0;
     fread(&totalChars, sizeof(totalChars), 1, in);
 
-    // 3️⃣ Leer bits y reconstruir texto
     BitReader br(in);
     std::string outText;
     outText.reserve((size_t)totalChars);
@@ -163,7 +131,6 @@ bool Huffman::decompress(const std::string& inputPath, const std::string& output
     }
     fclose(in);
 
-    // 4️⃣ Guardar texto reconstruido
     if (!writeStringToFile(outputPath, outText)) {
         printf("Error: no se pudo escribir el archivo de salida.\n");
         return false;

@@ -2,9 +2,6 @@
 #include <fstream>
 #include <iterator>
 
-// ============================================================
-//  BitWriter — MSB-first (confirmado por prueba 0xAA)
-// ============================================================
 BitWriter::BitWriter(std::FILE* out) : out_(out), buffer_(0), count_(0) {}
 BitWriter::~BitWriter() { flush(); }
 
@@ -32,9 +29,6 @@ void BitWriter::flush() {
     }
 }
 
-// ============================================================
-//  BitReader — MSB-first (debe coincidir con el escritor)
-// ============================================================
 BitReader::BitReader(std::FILE* in) : in_(in), buffer_(0), count_(0) {}
 BitReader::~BitReader() {}
 
@@ -45,15 +39,12 @@ int BitReader::readBit() {
         buffer_ = static_cast<unsigned char>(c);
         count_ = 8;
     }
-    int bit = (buffer_ >> 7) & 1;  // toma el bit más significativo
+    int bit = (buffer_ >> 7) & 1;
     buffer_ <<= 1;
     --count_;
     return bit;
 }
 
-// ============================================================
-//  Lectura y escritura de archivos
-// ============================================================
 bool readFileToString(const std::string& path, std::string& out) {
     std::ifstream in(path, std::ios::binary);
     if (!in) return false;

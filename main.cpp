@@ -2,15 +2,6 @@
 #include <iostream>
 #include <string>
 
-// ============================================================
-//  Programa principal para el compresor Huffman
-// ============================================================
-//
-// Uso:
-//   huffman.exe -c input.txt output.bin   → comprime
-//   huffman.exe -d input.bin output.txt   → descomprime
-//
-// ============================================================
 
 int main(int argc, char* argv[]) {
     if (argc != 4) {
@@ -27,19 +18,19 @@ int main(int argc, char* argv[]) {
     Huffman huff;
 
     if (mode == "-c") {
-        std::cout << "=== COMPRESIÓN HUFFMAN ===\n";
+        std::cout << "=Compresión\n";
         if (!huff.compress(inputPath, outputPath)) {
             std::cerr << "Error al comprimir el archivo.\n";
             return 1;
         }
     } else if (mode == "-d") {
-        std::cout << "=== DESCOMPRESIÓN HUFFMAN ===\n";
+        std::cout << "Descompresión\n";
         if (!huff.decompress(inputPath, outputPath)) {
             std::cerr << "Error al descomprimir el archivo.\n";
             return 1;
         }
     } else {
-        std::cerr << "Modo no reconocido. Usa -c o -d.\n";
+        std::cerr << "Comando no reconocido. Usa -c o -d.\n";
         return 1;
     }
 

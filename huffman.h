@@ -25,7 +25,6 @@ private:
     HuffmanNode* buildTreeFromFreq(const std::unordered_map<unsigned char, ull>& freq);
     void generateCodes(HuffmanNode* node, const std::string& prefix);
 
-    // nuevas funciones
     void writeTree(FILE* out, HuffmanNode* node);
     HuffmanNode* readTree(FILE* in);
 };
