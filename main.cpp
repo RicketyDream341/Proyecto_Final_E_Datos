@@ -1,39 +1,53 @@
 #include "Huffman.h"
 #include <iostream>
-#include <string>
+#include <cstddef>
+using namespace std;
 
-
-int main(int argc, char* argv[]) {
-    if (argc != 4) {
-        std::cout << "Uso:\n";
-        std::cout << "  huffman.exe -c <entrada.txt> <salida.bin>   (comprimir)\n";
-        std::cout << "  huffman.exe -d <entrada.bin> <salida.txt>   (descomprimir)\n";
-        return 1;
-    }
-
-    std::string mode = argv[1];
-    std::string inputPath = argv[2];
-    std::string outputPath = argv[3];
-
+int main() {
+    system("chcp 65001 > nul");
     Huffman huff;
+    int opcion;
+    string input, output;
 
-    if (mode == "-c") {
-        std::cout << "=Compresión\n";
-        if (!huff.compress(inputPath, outputPath)) {
-            std::cerr << "Error al comprimir el archivo.\n";
-            return 1;
-        }
-    } else if (mode == "-d") {
-        std::cout << "Descompresión\n";
-        if (!huff.decompress(inputPath, outputPath)) {
-            std::cerr << "Error al descomprimir el archivo.\n";
-            return 1;
-        }
-    } else {
-        std::cerr << "Comando no reconocido. Usa -c o -d.\n";
-        return 1;
-    }
+    do {
+        cout << "\n===== COMPRESOR HUFFMAN =====\n";
+        cout << "1. Comprimir archivo\n";
+        cout << "2. Descomprimir archivo\n";
+        cout << "3. Mostrar códigos Huffman\n";
+        cout << "4. Salir\n";
+        cout << "Selecciona: ";
+        cin >> opcion;
 
-    std::cout << "Proceso completado correctamente.\n";
+        switch (opcion) {
+        case 1:
+            cout << "Archivo a comprimir: ";
+            cin >> input;
+            cout << "Guardar como: ";
+            cin >> output;
+            huff.compress(input, output);
+            break;
+
+        case 2:
+            cout << "Archivo a descomprimir: ";
+            cin >> input;
+            cout << "Guardar como: ";
+            cin >> output;
+            huff.decompress(input, output);
+            break;
+
+        case 3:
+            huff.printCodes();
+            break;
+
+        case 4:
+            cout << "Saliendo...\n";
+            break;
+
+        default:
+            cout << "Opción inválida\n";
+        }
+
+    } while (opcion != 4);
+
     return 0;
 }

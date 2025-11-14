@@ -1,2 +1,0 @@
-Archivo de ejemplo para la ejecución del programa,
-varias líneas a la vez
