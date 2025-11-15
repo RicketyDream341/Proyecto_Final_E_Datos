@@ -2,12 +2,14 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+using namespace std;
 
 extern std::unordered_map<unsigned char, std::string> globalCodes;
 
 void mostrarMenu(Huffman &huff) {
     while (true) {
-        std::cout << "Compresor Huffman";
+        std::cout << "======COMPRESOR HUFFMAN=======";
+        std::cout<< endl;
         std::cout << "1. Comprimir archivo\n";
         std::cout << "2. Descomprimir archivo\n";
         std::cout << "3. Mostrar codigos Huffman\n";
