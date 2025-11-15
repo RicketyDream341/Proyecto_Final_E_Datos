@@ -8,7 +8,7 @@ extern std::unordered_map<unsigned char, std::string> globalCodes;
 
 void mostrarMenu(Huffman &huff) {
     while (true) {
-        std::cout << "======COMPRESOR HUFFMAN=======";
+        std::cout << "======COMPRESOR HUFFMAN=======\n";
         std::cout<< endl;
         std::cout << "1. Comprimir archivo\n";
         std::cout << "2. Descomprimir archivo\n";
