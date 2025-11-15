@@ -1,53 +1,107 @@
 #include "Huffman.h"
 #include <iostream>
-#include <cstddef>
-using namespace std;
+#include <string>
+#include <unordered_map>
 
-int main() {
-    system("chcp 65001 > nul");
+extern std::unordered_map<unsigned char, std::string> globalCodes;
+
+void mostrarMenu(Huffman &huff) {
+    while (true) {
+        std::cout << "Compresor Huffman";
+        std::cout << "1. Comprimir archivo\n";
+        std::cout << "2. Descomprimir archivo\n";
+        std::cout << "3. Mostrar codigos Huffman\n";
+        std::cout << "4. Salir\n";
+        std::cout << "Selecciona: ";
+
+        int opcion;
+        std::cin >> opcion;
+        std::cin.ignore();
+
+        std::string in, out;
+
+        if (opcion == 1) {
+            std::cout << "Archivo a comprimir: ";
+            std::getline(std::cin, in);
+            std::cout << "Guardar como: ";
+            std::getline(std::cin, out);
+
+            if (huff.compress(in, out))
+                std::cout << "Archivo comprimido correctamente.\n";
+            else
+                std::cout << "Error al comprimir archivo.\n";
+        }
+        else if (opcion == 2) {
+            std::cout << "Archivo a descomprimir: ";
+            std::getline(std::cin, in);
+            std::cout << "Guardar como: ";
+            std::getline(std::cin, out);
+
+            if (huff.decompress(in, out))
+                std::cout << "Archivo descomprimido correctamente.\n";
+            else
+                std::cout << "Error al descomprimir archivo.\n";
+        }
+        else if (opcion == 3) {
+            std::cout << "\nCodigos Huffman\n";
+
+            if (globalCodes.empty()) {
+                std::cout << "Debe haber un archivo comprimido antes.\n";
+            } else {
+                for (auto &p : globalCodes) {
+                    unsigned char c = p.first;
+                    std::string code = p.second;
+
+                    if (c == '\n')
+                        std::cout << "[\\n] = " << code << "\n";
+                    else if (c == ' ')
+                        std::cout << "[espacio] = " << code << "\n";
+                    else
+                        std::cout << c << " = " << code << "\n";
+                }
+            }
+        }
+        else if (opcion == 4) {
+            std::cout << "Saliendo\n";
+            break;
+        }
+        else {
+            std::cout << "Opcion invalida.\n";
+        }
+    }
+}
+
+int main(int argc, char* argv[]) {
     Huffman huff;
-    int opcion;
-    string input, output;
 
-    do {
-        cout << "\n===== COMPRESOR HUFFMAN =====\n";
-        cout << "1. Comprimir archivo\n";
-        cout << "2. Descomprimir archivo\n";
-        cout << "3. Mostrar códigos Huffman\n";
-        cout << "4. Salir\n";
-        cout << "Selecciona: ";
-        cin >> opcion;
+    if (argc == 4) {
+        std::string mode = argv[1];
+        std::string input = argv[2];
+        std::string output = argv[3];
 
-        switch (opcion) {
-        case 1:
-            cout << "Archivo a comprimir: ";
-            cin >> input;
-            cout << "Guardar como: ";
-            cin >> output;
-            huff.compress(input, output);
-            break;
-
-        case 2:
-            cout << "Archivo a descomprimir: ";
-            cin >> input;
-            cout << "Guardar como: ";
-            cin >> output;
-            huff.decompress(input, output);
-            break;
-
-        case 3:
-            huff.printCodes();
-            break;
-
-        case 4:
-            cout << "Saliendo...\n";
-            break;
-
-        default:
-            cout << "Opción inválida\n";
+        if (mode == "-c") {
+            if (huff.compress(input, output))
+                std::cout << "Compresion finalizada correctamente.\n";
+            else
+                std::cout << "Error en la compresion.\n";
+        }
+        else if (mode == "-d") {
+            if (huff.decompress(input, output))
+                std::cout << "Descompresion finalizada correctamente.\n";
+            else
+                std::cout << "Error en la descompresion.\n";
+        }
+        else {
+            std::cout << "Comando no reconocido.\n";
+            std::cout << "Ejemplos:\n";
+            std::cout << "  huffman.exe -c input.txt output.bin\n";
+            std::cout << "  huffman.exe -d input.bin output.txt\n";
         }
 
-    } while (opcion != 4);
+        return 0;
+    }
+
+    mostrarMenu(huff);
 
     return 0;
 }
